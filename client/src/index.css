@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/* ── Google Fonts ─────────────────────────────────────── */
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap");
+
+/* ── Design tokens ────────────────────────────────────── */
+:root {
+  /* Monochrome palette */
+  --black:       #0d0d0d;
+  --ink:         #1a1a1a;
+  --charcoal:    #2e2e2e;
+  --mid:         #6b6b6b;
+  --subtle:      #a8a8a8;
+  --border:      #e4e4e4;
+  --surface:     #f7f7f7;
+  --white:       #ffffff;
+
+  /* Accent — a single warm off-black for CTAs */
+  --accent:      #1a1a1a;
+  --accent-hover:#000000;
+
+  /* Danger */
+  --danger:      #c0392b;
+  --danger-hover:#a93226;
+
+  /* Overdue */
+  --overdue:     #b35c00;
+
+  /* Typography */
+  --font-sans:   "DM Sans", system-ui, sans-serif;
+  --font-mono:   "DM Mono", "Fira Code", monospace;
+
+  /* Spacing */
+  --radius:      6px;
+  --radius-lg:   10px;
+}
+
+/* ── Reset & base ─────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--surface);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* ── Scrollbar ────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+/* ── Focus ring ───────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--charcoal);
+  outline-offset: 2px;
+}
+
+/* ── Selection ────────────────────────────────────────── */
+::selection {
+  background: var(--ink);
+  color: var(--white);
+}
