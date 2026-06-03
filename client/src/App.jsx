@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useTasks } from "./hooks/useTasks";
-
+import TaskForm from "./components/TaskForm";
+import TaskList from "./components/TaskList";
 
 export default function App() {
-  const [status, setStatus] = useState("all");   // "all" | "active" | "completed"
-  const [search, setSearch] = useState("");       // search query string
+  // eslint-disable-next-line no-unused-vars
+  const [status, setStatus] = useState("all"); // "all" | "active" | "completed"
+  // eslint-disable-next-line no-unused-vars
+  const [search, setSearch] = useState(""); // search query string
 
   const {
     tasks,
@@ -24,6 +27,9 @@ export default function App() {
         style={{
           borderBottom: "1px solid var(--border)",
           background: "var(--white)",
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
         }}
       >
         <div
@@ -64,30 +70,105 @@ export default function App() {
         style={{
           maxWidth: "720px",
           margin: "0 auto",
-          padding: "32px 24px",
+          padding: "32px 24px 80px",
         }}
       >
-        {/* Loading */}
-        {loading && (
-          <p style={{ color: "var(--subtle)", fontFamily: "var(--font-mono)", fontSize: "0.85rem" }}>
-            Loading…
-          </p>
-        )}
+        {/* Add task form */}
+        <div style={{ marginBottom: "28px" }}>
+          <TaskForm onAdd={addTask} />
+        </div>
 
-        {/* Error */}
+        {/* Error banner */}
         {error && (
-          <p style={{ color: "var(--danger)", fontFamily: "var(--font-mono)", fontSize: "0.85rem" }}>
+          <div
+            style={{
+              padding: "10px 14px",
+              borderRadius: "var(--radius)",
+              background: "#fef2f2",
+              border: "1px solid #fecaca",
+              color: "var(--danger)",
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.78rem",
+              marginBottom: "16px",
+            }}
+          >
             {error}
-          </p>
+          </div>
         )}
 
-        {/* Placeholder — components arrive in Part 3 */}
-        {!loading && !error && (
-          <p style={{ color: "var(--mid)", fontFamily: "var(--font-mono)", fontSize: "0.85rem" }}>
-            {tasks.length === 0
-              ? "add the full UI."
-              : `${tasks.length} task(s) loaded — UI .`}
-          </p>
+        {/* Section label */}
+        {!loading && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              marginBottom: "12px",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.68rem",
+                color: "var(--subtle)",
+                textTransform: "uppercase",
+                letterSpacing: "0.07em",
+              }}
+            >
+              Tasks
+            </span>
+            <div
+              style={{
+                flex: 1,
+                height: "1px",
+                background: "var(--border)",
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.68rem",
+                color: "var(--subtle)",
+              }}
+            >
+              {tasks.length}
+            </span>
+          </div>
+        )}
+
+        {/* Loading skeleton */}
+        {loading && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                style={{
+                  height: "52px",
+                  borderRadius: "var(--radius)",
+                  background: "var(--border)",
+                  opacity: 1 - i * 0.2,
+                  animation: "pulse 1.5s ease-in-out infinite",
+                }}
+              />
+            ))}
+            <style>{`
+              @keyframes pulse {
+                0%, 100% { opacity: 0.6; }
+                50% { opacity: 0.3; }
+              }
+            `}</style>
+          </div>
+        )}
+
+        {/* Task list */}
+        {!loading && (
+          <TaskList
+            tasks={tasks}
+            filter={status}
+            onToggle={toggleTask}
+            onEdit={editTask}
+            onDelete={removeTask}
+          />
         )}
       </main>
     </div>
