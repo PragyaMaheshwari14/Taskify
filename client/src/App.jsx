@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useTasks } from "./hooks/useTasks";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
+import FilterBar from "./components/FilterBar";
+import TaskCounter from "./components/TaskCounter";
 
 export default function App() {
   // eslint-disable-next-line no-unused-vars
@@ -20,8 +22,17 @@ export default function App() {
     removeTask,
   } = useTasks({ status, search });
 
+  const handleSearchChange = useCallback((val) => {
+    setSearch(val);
+  }, []);
+
+  const handleStatusChange = useCallback((val) => {
+    setStatus(val);
+    setSearch(""); // clear search when switching tabs
+  }, []);
+
   return (
-    <div className="min-h-screen" style={{ background: "var(--surface)" }}>
+    <div style={{ minHeight: "100vh", background: "var(--surface)" }}>
       {/* ── Header ─────────────────────────────────────── */}
       <header
         style={{
@@ -78,6 +89,20 @@ export default function App() {
           <TaskForm onAdd={addTask} />
         </div>
 
+        {/* Counter strip — active vs completed progress */}
+        <TaskCounter
+          totalActive={meta.totalActive}
+          totalCompleted={meta.totalCompleted}
+        />
+
+        {/* Filter bar — tabs + search */}
+        <FilterBar
+          status={status}
+          onStatusChange={handleStatusChange}
+          search={search}
+          onSearchChange={handleSearchChange}
+        />
+
         {/* Error banner */}
         {error && (
           <div
@@ -115,7 +140,7 @@ export default function App() {
                 letterSpacing: "0.07em",
               }}
             >
-              Tasks
+               {status === "all" ? "Tasks" : status}
             </span>
             <div
               style={{
