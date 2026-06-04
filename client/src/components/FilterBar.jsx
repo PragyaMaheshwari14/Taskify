@@ -1,10 +1,31 @@
+import { useState, useEffect } from "react";
+import { useDebounce } from "../hooks/useDebounce";
 
 export default function FilterBar({ status, onStatusChange, search, onSearchChange }) {
+
+  const [localSearch, setLocalSearch] = useState(search);
+
+  const debouncedSearch = useDebounce(localSearch, 350);
+
+  useEffect(() => {
+    onSearchChange(debouncedSearch);
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (search === "") setLocalSearch("");
+  }, [search]);
+
   const tabs = [
     { value: "all",       label: "All" },
     { value: "active",    label: "Active" },
     { value: "completed", label: "Completed" },
   ];
+
+    const handleClear = () => {
+    setLocalSearch("");
+    onSearchChange("");
+  };
 
   return (
     <div
@@ -45,6 +66,7 @@ export default function FilterBar({ status, onStatusChange, search, onSearchChan
                 boxShadow: active ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
                 cursor: "pointer",
                 transition: "all 0.15s",
+                minHeight: "32px",
               }}
             >
               {tab.label}
@@ -54,7 +76,7 @@ export default function FilterBar({ status, onStatusChange, search, onSearchChan
       </div>
 
       {/* ── Search input ─────────────────────────────── */}
-      <div style={{ position: "relative", maxWidth: "320px" }}>
+      <div style={{ position: "relative", width: "100%", maxWidth: "320px" }}>
         {/* Search icon */}
         <span
           style={{
@@ -90,10 +112,9 @@ export default function FilterBar({ status, onStatusChange, search, onSearchChan
           onFocus={(e) => (e.target.style.borderColor = "var(--charcoal)")}
           onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
         />
-        {/* Clear button */}
-        {search && (
+          {localSearch && (
           <button
-            onClick={() => onSearchChange("")}
+            onClick={handleClear}
             style={{
               position: "absolute",
               right: "8px",
@@ -105,7 +126,13 @@ export default function FilterBar({ status, onStatusChange, search, onSearchChan
               cursor: "pointer",
               fontSize: "0.75rem",
               lineHeight: 1,
-              padding: "2px",
+              padding: "4px",
+              // Bigger tap target
+              minWidth: "24px",
+              minHeight: "24px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
             aria-label="Clear search"
           >

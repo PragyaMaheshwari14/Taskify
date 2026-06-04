@@ -62,7 +62,7 @@ export default function App() {
               letterSpacing: "-0.02em",
             }}
           >
-            taskflow
+            Taskify
           </h1>
           <span
             style={{
